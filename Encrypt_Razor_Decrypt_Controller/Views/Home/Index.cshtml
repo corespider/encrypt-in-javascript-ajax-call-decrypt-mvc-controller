@@ -1,0 +1,43 @@
+﻿@using Encrypt_Razor_Decrypt_Controller.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#btnSave").click(function () {
+           
+            var enc1 = 'TestData';
+
+            var key = CryptoJS.enc.Utf8.parse('8080808080808080');
+            var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
+            var encryptedlogin = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(enc1), key,
+                { keySize: 128 / 8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            var enc = encryptedlogin;
+            console.log(enc);
+        
+          
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetData")',
+                data: JSON.stringify({enc: '' + enc + ''}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function () {
+                    alert("Data has been added successfully.");
+                },
+                error: function () {
+                    alert("Error while inserting data");
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+
+<h2>Index</h2>
+<input type="button" name="Save" value="Save"  id="btnSave"/>
+
